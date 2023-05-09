@@ -1,0 +1,6 @@
+package com.spring.board.controller;
+
+@component
+public class test {
+
+}

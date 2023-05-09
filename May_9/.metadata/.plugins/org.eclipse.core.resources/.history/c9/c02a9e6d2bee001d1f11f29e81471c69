@@ -1,0 +1,11 @@
+package com.spring.board.model;
+
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
+//===== #32. DAO 선언 =====
+@Component
+@Repository
+public class BoardDAO implements InterBoardDAO {
+
+}

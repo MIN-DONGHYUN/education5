@@ -1,0 +1,19 @@
+package com.spring.board.service;
+
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+// ===== #31. Service 선언 =====
+// Service 단은 트랜잭센 처리를 담당하는 곳, 업무를 처리하는 곳,(업무란 DB와 관련된 작업을 말한다), 비지니스(Business)단이라고 부른다.
+@Service
+@Component
+public class BoardService implements InterBoardService {
+
+	@Override
+	public int test_insert() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
+}

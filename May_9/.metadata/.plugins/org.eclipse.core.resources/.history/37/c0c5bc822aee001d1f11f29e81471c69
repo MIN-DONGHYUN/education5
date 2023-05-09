@@ -1,0 +1,10 @@
+package com.spring.board.service;
+
+import org.springframework.stereotype.Component;
+
+// ===== #31. Service 선언 ===== 
+@Component
+public class BoardService implements InterBoardService {
+
+	
+}

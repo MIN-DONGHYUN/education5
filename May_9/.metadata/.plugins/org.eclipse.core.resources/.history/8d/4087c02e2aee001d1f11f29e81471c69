@@ -1,0 +1,9 @@
+package com.spring.board.service;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class BoardService implements InterBoardService{
+
+	
+}
