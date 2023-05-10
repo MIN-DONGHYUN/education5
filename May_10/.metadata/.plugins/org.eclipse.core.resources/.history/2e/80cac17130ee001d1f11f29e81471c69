@@ -1,0 +1,30 @@
+package com.spring.board.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import com.spring.board.model.InterBoardDAO;
+
+// ===== #31. Service 선언 =====
+// Service 단은 트랜잭센 처리를 담당하는 곳, 업무를 처리하는 곳,(업무란 DB와 관련된 작업을 말한다), 비지니스(Business)단이라고 부른다.
+@Component
+@Service
+public class BoardService implements InterBoardService {
+
+	// ===== #34. 의존객체 주입하기(DI : Dependency Injection) ====
+	// bean 으로 올라가있기 때문에 InterBoardDAO dao = new BoardDAO 로 안해도 된다. 다만 @Autowired 로 받아옴
+	
+	@Autowired
+	private InterBoardDAO dao;    // 현재 상태는 null
+	
+	
+	@Override
+	public int test_insert() {
+		
+		
+		return 0;
+	}
+
+	
+}
