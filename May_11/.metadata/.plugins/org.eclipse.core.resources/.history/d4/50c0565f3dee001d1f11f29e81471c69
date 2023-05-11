@@ -1,0 +1,13 @@
+package com.spring.board.model;
+
+import java.util.List;
+
+public interface InterBoardDAO {
+
+	
+	int test_insert();   // myMVC_USER.spring_test 테이블에 insert 하기
+						 // HR.spring_test 테이블에 insert 하기
+
+	List<TestVO> test_select();
+	
+}

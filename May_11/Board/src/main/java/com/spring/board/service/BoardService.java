@@ -1,0 +1,139 @@
+package com.spring.board.service;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import com.spring.board.common.AES256;
+import com.spring.board.model.BoardVO;
+import com.spring.board.model.InterBoardDAO;
+import com.spring.board.model.MemberVO;
+import com.spring.board.model.TestVO;
+
+// ===== #31. Service 선언 =====
+// Service 단은 트랜잭센 처리를 담당하는 곳, 업무를 처리하는 곳,(업무란 DB와 관련된 작업을 말한다), 비지니스(Business)단이라고 부른다.
+@Component
+@Service
+public class BoardService implements InterBoardService {
+	//  BoardService 클래스는 클래스명에서 첫글자만 소문자로 된 boardService 이름으로 bean 객체가 생성된다
+	
+	
+	// ===== #34. 의존객체 주입하기(DI : Dependency Injection) ====
+	// bean 으로 올라가있기 때문에 InterBoardDAO dao = new BoardDAO 로 안해도 된다. 다만 @Autowired 로 받아옴
+	
+	@Autowired       // type 에 따라 알아서 자동적으로 Bean 을 주입해준다.
+	private InterBoardDAO dao;    
+	
+	
+	// === #45. 양방향 암호화 알고리즘인 AES256 를 사용하여 복호화 하기 위한 클래스 의존객체 주입하기(DI: Dependency Injection) ===
+    @Autowired
+    private AES256 aes;
+    // Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.board.common.AES256 의 bean 을  aes 에 주입시켜준다. 
+    // 그러므로 aes 는 null 이 아니다.
+    // com.spring.board.common.AES256 의 bean 은 /webapp/WEB-INF/spring/appServlet/servlet-context.xml 파일에서 bean 으로 등록시켜주었음. 
+	
+	@Override
+	public int test_insert() {
+		
+		int n = dao.test_insert();
+		
+		return n;
+	}
+
+
+	@Override
+	public List<TestVO> test_select() {
+		
+		List<TestVO> testvoList =  dao.test_select();
+		
+		return testvoList;
+	}
+
+
+	@Override
+	public int test_insert(Map<String, String> paraMap) {
+		int n = dao.test_insert(paraMap);
+		return n;
+	}
+
+
+	@Override
+	public int test_insert(TestVO vo) {
+		
+		int n = dao.test_insert(vo);
+		return n;
+	}
+
+	// 기초 부분 끝 
+	///////////////////////////////////////////////////////////////////////////////
+	
+	// === #37. 시작페이지에서 메인 이미지를 보여주는 것 === // 
+	@Override
+	public List<String> getImgfilenameList() {
+		
+		List<String> imgfilenameList = dao.getImgfilenameList();
+		
+		return imgfilenameList;
+	} // end of public List<String> getImgfilenameList()
+
+	
+	
+	// === #42. 로그인 처리하기 === //  
+	@Override
+	public MemberVO getLoginMember(Map<String, String> paraMap) {
+		
+		MemberVO loginuser = dao.getLoginMember(paraMap);
+		
+		// === #48. aes 의존객체를 사용하여 로그인 되어진 사용자(loginuser)의 이메일 값을 복호화 하도록 한다. === 
+	    //          또한 암호변경 메시지와 휴면처리 유무 메시지를 띄우도록 업무처리를 하도록 한다.
+		if(loginuser != null && loginuser.getPwdchangegap() >= 3) {   
+			// 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났다면 
+			loginuser.setRequirepwdChange(true);   // MemberVO 에서 private boolean requirepwdChange = false; 이 기본값인데 true로 바꾼다.
+			// 로그인시 암호를 변경해라 라는 alert를 띄울 것이다.
+		}
+		
+		if(loginuser != null && loginuser.getIdle() == 0 && loginuser.getLastlogingap() >= 12) {   
+			// 마지막으로 로그인한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴먼으로 지정 
+			loginuser.setIdle(1);
+			
+			// === tbl_member 테이블의 idle 컬럼에 값을 1로 변경하기 === //
+			int n = dao.updateIdle(paraMap.get("userid"));    //controller 에서 id 값인 userid 를 가져옴  
+			// 존재하면 1 아니면 0
+			
+			
+		}
+		
+		// 로그인 되어졌는데 어이디가 암호화가 되어있으므로 복화화 해서 나타내 주기 위해 작성함 
+		if(loginuser != null) {
+			try {
+				
+				String email = aes.decrypt(loginuser.getEmail());
+				loginuser.setEmail(email);    
+				
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			} // 이메일을 복호화 시킨다 
+			
+		}
+		
+			
+		return loginuser;
+	}
+
+	// === #55. 글쓰기( 파일첨부가 없는 글쓰기) === //
+	@Override
+	public int add(BoardVO boardvo) {
+		
+		int n = dao.add(boardvo);
+		
+		return n;
+	}
+
+	
+}
