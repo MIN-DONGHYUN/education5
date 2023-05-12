@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="board">
+
+	<insert id="test_insert">
+		insert into spring_test(no, name, writeday)
+		values(101, '엄정화', default)
+	</insert>
+
+
+	<!-- !!!!!! 주의해야할 사항은 리턴타입이 List<E>  이더라도 resultType 은 E 으로 해야만 한다. !!!!!!!!!!! -->
+	<!--  이 쿼리에서 반환되는 결과를 TestVO 객체에 매핑하기 위해서 입니다. -->
+	<!-- resultType 속성은 쿼리 결과를 매핑해야 할 객체의 타입을 지정합니다. 이 경우, 쿼리 결과는 TestVO 클래스의 인스턴스로 매핑됩니다. -->
+	<select id="test_select" resultType="com.spring.board.model.TestVO">
+		select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
+    	from spring_test
+   	    order by writeday desc
+	
+	</select>
+	
+	
+	<!-- #### 중요 #### 
+       HashMap 타입으로 매개변수를 받아온 것을 꺼내서 사용할때 
+       1. 데이터로 사용할때는 #{key명} 이고,
+       2. 식별자(테이블명, 컬럼명)로 사용할때는 ${key명} 이고,
+       3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는 
+             그냥 <if test="key명"> <when test="key명"> 으로 사용한다. 
+   -->
+	
+	<!--  parameterType 속성은 SQL 문에 전달되는 객체의 타입을 지정하는 데 사용됩니다.
+	      HashMap은 insert 문의 파라미터 값을 보유하기 위해 사용됩니다.  -->
+	<insert id ="test_insert_map" parameterType="HashMap">
+		insert into spring_test(no, name, writeday)
+		values( #{no}, #{name} , default)   
+	</insert>
+	
+	
+	
+	
+	<!--  두번째 vo 이용한 form  -->
+	
+	<!-- #### 중요 #### 
+       HashMap 타입으로 매개변수를 받아온 것을 꺼내서 사용할때 
+       1. 데이터로 사용할때는 #{key명} 이고,
+       2. 식별자(테이블명, 컬럼명)로 사용할때는 ${key명} 이고,
+       3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는 
+             그냥 <if test="key명"> <when test="key명"> 으로 사용한다. 
+   -->
+	
+	<!--  parameterType 속성은 SQL 문에 전달되는 객체의 타입을 지정하는 데 사용됩니다.
+	      HashMap은 insert 문의 파라미터 값을 보유하기 위해 사용됩니다.  -->
+	
+	<!--  === 파라미터로 VO가 들어오면 입력해줄때 값은 #(get다음에 나오는 메소드명인데 첫글자는 반드시 소문자) 으로 해준다. ===  -->
+	<insert id ="test_insert_vo" parameterType="com.spring.board.model.TestVO">
+		insert into spring_test(no, name, writeday)
+		values( #{no}, #{name}, default)   
+	</insert>
+
+
+	<!--  ================ 기초 끝 ======================-->
+
+	<!-- ======================================================================== -->
+
+	<!--  === #38. 시작페이지에서 메인 이미지를 보여주는 것  ===  -->
+	
+	<select id="getImgfilenameList" resultType="String">   <!--  원래는 java.lang.String 으로 써야하는데 우리가 만든것만 써도 됨  -->
+		select imgfilename
+		from TBL_MAIN_IMAGE
+		order by imgno desc
+	</select>
+	
+	
+	
+	<!-- #### 중요 #### 
+       HashMap 타입으로 매개변수를 받아온 것을 꺼내서 사용할때 
+       1. 데이터로 사용할때는 #{key명} 이고,
+       2. 식별자(테이블명, 컬럼명)로 사용할때는 ${key명} 이고,
+       3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는 
+             그냥 <if test="key명"> <when test="key명"> 으로 사용한다. 
+   -->
+   
+	<!--  === #47. 로그인 처리하기  ===  -->
+	<select id="getLoginMember" parameterType="HashMap" resultType="com.spring.board.model.MemberVO">   <!--  값이 넘어왔으므로 parameterType 사용 -->
+		
+		select userid, name, email, mobile, postcode, address, detailaddress, extraaddress, gender,
+		       birthyyyy , birthmm, birthdd, coin, point, registerday, idle,
+		       pwdchangegap ,  
+		       NVL(lastlogingap, trunc(months_Between(sysdate, registerday)))  AS lastlogingap 
+		from 
+		( 
+		    select userid, name, email, mobile, postcode, address, detailaddress, extraaddress, gender
+		         , substr(birthday, 1 , 4) AS birthyyyy , substr(birthday, 6 , 2) AS birthmm , substr(birthday, 9) AS birthdd 
+				 , coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday, idle  
+				 , trunc(months_between(sysdate, lastpwdchangedate), 0) AS pwdchangegap  
+		    from tbl_member
+			where status = 1 and userid = #{userid} and pwd = #{pwd}
+		) M  
+		CROSS JOIN 
+		( 
+		    select trunc(months_Between(sysdate, max(logindate)),0) AS lastlogingap 
+		    from tbl_loginhistory 
+		    where fk_userid = #{userid}
+		) H
+		<!--  #{userid}와 #{pwd}는 값을 가져온곳의 아이디를 써야 한다 여기서는 controller 에 있다. 
+		      여기에 넣으면 자동적으로set이 되어진다 mybatise 자동 set 기억!!!!
+		      memberVO 에 필드로 정의 되어진 것이 아니라면 set 이 안됨 -->
+	</select>
+	
+	<update id="updateIdle" parameterType="String">
+ 		update tbl_member set idle = 1
+ 		where userid = #{userid}	
+	</update>
+	
+	
+	
+	<!--  === #57. 글쓰기( 파일첨부가 없는 글쓰기) === --> 
+	<insert id="add" parameterType="com.spring.board.model.BoardVO">
+		insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status)
+		values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default)
+	</insert>
+	
+	
+	
+	<!-- === #61. 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 === -->  
+	<select id="boardListNoSearch" resultType="com.spring.board.model.BoardVO">
+		select seq, fk_userid, name, subject, readCount, to_char(regdate, 'yyyy-mm-dd hh24:mi:ss') as regdate
+		from tbl_board
+		where status = 1
+		order by seq desc
+	</select>
+	
+	<!-- === #66. 글 조회수 1 증가하기 (update) === -->
+	<select id="setAddReadCount" parameterType="HashMap">
+	
+	
+	</select>
+	
+	
+	
+	
+</mapper>
