@@ -1,0 +1,73 @@
+package com.spring.board.aop;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+// === #53. 공통관심사 클래스(Aspect Class) 생성하기 === //
+//  AOP (Aspect Oriented Programming)
+//  OOP (Object oriented Programming)  객체 지향 프로그램 ,(필드, 메소드), 상속성(부모-자식), 추상화(필요한건만 얻어오는 정보), 캡슐화(은닉화 private), 다형성(자식 클래스는 부모클래스꺼 받을수 있는것) 
+@Aspect              // 공통관심사 클래스(Aspect Class)로 등록된다.
+@Component           // bean 으로 등록된다.
+public class BoardAOP {
+	
+	// ===== Before Advice( 이름은 서영학 강사님이 작명하신것 면접에 사용 X 면접은 Before Advice로 사용 => 보조업무) 만들기 ====== // 
+   /*
+	       주업무(<예: 글쓰기, 글수정, 댓글쓰기 직원목록조회 등등>)를 실행하기 앞서서  
+	       이러한 주업무들은 먼저 로그인을 해야만 사용가능한 작업이므로
+	       주업무에 대한 보조업무<예: 로그인 유무검사> 객체로 로그인 여부를 체크하는
+	       관심 클래스(Aspect 클래스)를 생성하여 포인트컷(주업무)과 어드바이스(보조업무)를 생성하여
+	       동작하도록 만들겠다.
+   */   
+	
+	
+	// === Pointcut (주업무) 을 설정해야 한다. === //
+	//     Pointcut 이란 공통관심사<예: 로그인 유무검사>를 필요로 하는 메소드를 말한다.
+	@Pointcut("execution(public * com.spring..*BoardController.requiredLogin_*(..) )")    // * 은 리턴 타입이 아무거나 가능하다라는 말이다.
+	// (..) 파라미터가 있든 없든 아무거나 다 사용이 가능하다.     
+	public void requiredLogin() {}
+	
+	
+	
+	// 아래에 해당한것은 BoardController 에서  @RequestMapping(value="/add.action", method = {RequestMethod.GET}) 
+	//                                 public ModelAndView requiredLogin_add(ModelAndView mav)   를 설정한 것
+	
+	// === Before Advice (공통관심사, 보조업부) 를 구현한다.  즉 requiredLogin_* 이걸 하기 앞서서 실행하는 것이다.
+	@Before("requiredLogin()")
+	public void loginCheck(JoinPoint joinpoint) {  // 로그인 유무 검사를 하는 메소드 작성하기 
+		// ~~~~~~~~~~~~~~~~ JoinPoint joinpoint 는 포인트컷 되어진 주업무의 메소드 이다. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+		// 지금은 requiredLogin_add
+		
+	
+		// 로그인 유무를 확인하기 위해서는 request 를 통해 session 을 얻어와야 한다. 
+		HttpServletRequest request = (HttpServletRequest) joinpoint.getArgs()[0];    // 리턴 타입은 object의 배열   // 주업무인 requiredLogin_add 메소드의 파라미터를 말한다.
+		// [0] 은 주업무 메소드의 첫번째 파라미터를 얻어오는 것이다.
+		
+		HttpSession session = request.getSession(); // 세션 값 가져오자 
+		
+		// 로그인을 안한 상태인가?   session 값에 로그인 유저가 없으면 
+		if(session.getAttribute("loginuser") == null ) {
+			String message = "먼저 로그인 하세여~~~";
+			String loc = request.getContextPath()+"/login.action";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+			
+			// controller 와 다른 방식으로 보내야 한다  dispatcher방식으로  (왜냐하면 자바 클래스 이므로 )
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
+			
+		}
+		
+	}
+	
+	
+}
