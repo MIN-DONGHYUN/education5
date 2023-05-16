@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	String ctxPath = request.getContextPath();
+    //     /board
+%>
+    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.6.4.min.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		// 확인 버튼 클릭시 
+		$("button#btnOK").click(function() {
+			
+			const no_val = $("input#no").val();       // 이름이 no 인 것의 값을 no_val에 저장 
+			const name_val = $("input#name").val();
+			
+			if(no_val.trim() == "" || name_val.trim() == "") {  //두개중 한개라도 없다면
+				alert("번호와 성명을 모두 입력하세요!!");
+				return;   							// 종료 
+			}
+			
+			$.ajax({
+				url:"<%= ctxPath%>/test/ajax_insert.action",
+				type:"post",
+				data:{"no":no_val,
+					  "name":name_val},
+				dataType:"json",
+				success:function(json) {
+					
+					console.log("====확인용 :  " + JSON.stringify(json));   // JSON.stringify(json) 요고 잘 기억하자 제발~~~~
+					// ==== 확인용 : {"n":1}
+					
+					if(json.n == 1) { //json의 n 값이 1이라면 
+						func_ajax_select();    // 함수 호출 
+						$("input#no").val("");    // 값 초기화 
+						$("input#name").val("");
+					}
+				},
+				error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+			
+			
+		}); // end of $("button#btnOK").click() -----------------------------------------
+
+	}); // end of $(document).ready(function()
+
+			
+	//function Declaration
+	function func_ajax_select() {
+		
+	}
+			
+
+</script>
+
+
+
+</head>
+<body>
+
+	<h2>Ajax 연습</h2>
+	<p> 안녕하세요? <br> 
+		여기는 /board/test/test_form_3.action 페이지 입니다.
+	</p>
+	
+	      번호 : <input type="text" id="no" /><br>
+	      성명 : <input type="text" id="name" /><br>
+	       <button type="button" id="btnOK">확인</button>
+	       <button type="reset" id="btnCancel">취소</button>
+    <br><br>
+    
+    <div id="view"></div>
+    
+
+</body>
+</html>
