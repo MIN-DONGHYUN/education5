@@ -1,0 +1,245 @@
+package com.spring.board.service;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.spring.board.common.AES256;
+import com.spring.board.model.BoardVO;
+import com.spring.board.model.CommentVO;
+import com.spring.board.model.InterBoardDAO;
+import com.spring.board.model.MemberVO;
+import com.spring.board.model.TestVO;
+
+// ===== #31. Service 선언 =====
+// Service 단은 트랜잭센 처리를 담당하는 곳, 업무를 처리하는 곳,(업무란 DB와 관련된 작업을 말한다), 비지니스(Business)단이라고 부른다.
+@Component
+@Service
+public class BoardService implements InterBoardService {
+	//  BoardService 클래스는 클래스명에서 첫글자만 소문자로 된 boardService 이름으로 bean 객체가 생성된다
+	
+	
+	// ===== #34. 의존객체 주입하기(DI : Dependency Injection) ====
+	// bean 으로 올라가있기 때문에 InterBoardDAO dao = new BoardDAO 로 안해도 된다. 다만 @Autowired 로 받아옴
+	
+	@Autowired       // type 에 따라 알아서 자동적으로 Bean 을 주입해준다.
+	private InterBoardDAO dao;    
+	
+	
+	// === #45. 양방향 암호화 알고리즘인 AES256 를 사용하여 복호화 하기 위한 클래스 의존객체 주입하기(DI: Dependency Injection) ===
+    @Autowired
+    private AES256 aes;
+    // Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.board.common.AES256 의 bean 을  aes 에 주입시켜준다. 
+    // 그러므로 aes 는 null 이 아니다.
+    // com.spring.board.common.AES256 의 bean 은 /webapp/WEB-INF/spring/appServlet/servlet-context.xml 파일에서 bean 으로 등록시켜주었음. 
+	
+	@Override
+	public int test_insert() {
+		
+		int n = dao.test_insert();
+		
+		return n;
+	}
+
+
+	@Override
+	public List<TestVO> test_select() {
+		
+		List<TestVO> testvoList =  dao.test_select();
+		
+		return testvoList;
+	}
+
+
+	@Override
+	public int test_insert(Map<String, String> paraMap) {
+		int n = dao.test_insert(paraMap);
+		return n;
+	}
+
+
+	@Override
+	public int test_insert(TestVO vo) {
+		
+		int n = dao.test_insert(vo);
+		return n;
+	}
+
+	// 기초 부분 끝 
+	///////////////////////////////////////////////////////////////////////////////
+	
+	// === #37. 시작페이지에서 메인 이미지를 보여주는 것 === // 
+	@Override
+	public List<String> getImgfilenameList() {
+		
+		List<String> imgfilenameList = dao.getImgfilenameList();
+		
+		return imgfilenameList;
+	} // end of public List<String> getImgfilenameList()
+
+	
+	
+	// === #42. 로그인 처리하기 === //  
+	@Override
+	public MemberVO getLoginMember(Map<String, String> paraMap) {
+		
+		MemberVO loginuser = dao.getLoginMember(paraMap);
+		
+		// === #48. aes 의존객체를 사용하여 로그인 되어진 사용자(loginuser)의 이메일 값을 복호화 하도록 한다. === 
+	    //          또한 암호변경 메시지와 휴면처리 유무 메시지를 띄우도록 업무처리를 하도록 한다.
+		if(loginuser != null && loginuser.getPwdchangegap() >= 3) {   
+			// 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났다면 
+			loginuser.setRequirepwdChange(true);   // MemberVO 에서 private boolean requirepwdChange = false; 이 기본값인데 true로 바꾼다.
+			// 로그인시 암호를 변경해라 라는 alert를 띄울 것이다.
+		}
+		
+		if(loginuser != null && loginuser.getIdle() == 0 && loginuser.getLastlogingap() >= 12) {   
+			// 마지막으로 로그인한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴먼으로 지정 
+			loginuser.setIdle(1);
+			
+			// === tbl_member 테이블의 idle 컬럼에 값을 1로 변경하기 === //
+			int n = dao.updateIdle(paraMap.get("userid"));    //controller 에서 id 값인 userid 를 가져옴  
+			// 존재하면 1 아니면 0
+			
+			
+		}
+		
+		// 로그인 되어졌는데 어이디가 암호화가 되어있으므로 복화화 해서 나타내 주기 위해 작성함 
+		if(loginuser != null) {
+			try {
+				
+				String email = aes.decrypt(loginuser.getEmail());
+				loginuser.setEmail(email);    
+				
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			} // 이메일을 복호화 시킨다 
+			
+		}
+		
+			
+		return loginuser;
+	}
+
+	// === #55. 글쓰기( 파일첨부가 없는 글쓰기) === //
+	@Override
+	public int add(BoardVO boardvo) {
+		
+		int n = dao.add(boardvo);
+		
+		return n;
+	}
+
+	// === #59. 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 === // 
+	@Override
+	public List<BoardVO> boardListNoSearch() {
+		
+		List<BoardVO> boardList =  dao.boardListNoSearch();
+		
+		return boardList;
+	}
+
+	// === #63. 글 조회수 증가와 함깨 글 1개를 조회를 해주는 것 === //
+	// (먼저, 로그인을 한 상태에서 다른 사람의 글을 조회할 경우에는 글조회수 컬럼의 값을 1증가 해야 한다.)
+	@Override
+	public BoardVO getView(Map<String, String> paraMap) {
+		
+		BoardVO boardvo = dao.getView(paraMap); // 글 1개 조회하기 (DB에서 읽어올 것이다.)
+		
+		//paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고, 로그인이 안된상태이라면 값은 null 이다. 
+		String login_userid = paraMap.get("login_userid");
+		
+		// 로그인 되어있고 글이 있는 번호이며 로그인 유저와 글 작성자가 같지 않다면 
+		if(login_userid != null && boardvo != null && 
+		   !login_userid.equals(boardvo.getFk_userid()))
+		{
+			// 글 조회수 증가는 로그인한 상태에서 다른 사람의 글을 읽을때만 조회수를 증가하도록 한다.
+			
+			dao.setAddReadCount(boardvo.getSeq());   // 글 조회수 1 증가하기 (update) 
+			boardvo = dao.getView(paraMap);	        //update 된 글을 읽어오기 위해 한번더 쓴다.
+		}
+		
+		return boardvo;
+	}
+
+	// === #70. 글 조회수 증가는 없고 단순히  글 1개를 조회를 해주는것 === //
+	@Override
+	public BoardVO getViewWithNoAddCount(Map<String, String> paraMap) {
+		BoardVO boardvo = dao.getView(paraMap); // 글 1개 조회하기
+		return boardvo;
+	}
+
+	// === #73. 1개글 수정하기  === //
+	@Override
+	public int edit(BoardVO boardvo) {
+		
+		int n = dao.edit(boardvo);
+		
+		return n;
+	}
+
+	// === #78. 1개글 삭제하기 === //
+	@Override
+	public int del(Map<String, String> paraMap) {
+		
+		int n = dao.del(paraMap);
+		
+		return n;
+	}
+
+	
+	// === #85. 댓글쓰기(transaction 처리) === //
+	// tbl_comment 테이블에 insert 된 다음에 
+	// tbl_board 테이블에 commentCount 컬럼이 1증가(update) 하도록 요청한다.
+	// 이어서 회원의 포인트를 50점을 증가하도록 한다.
+	// 즉, 2개이상의 DML 처리를 해야하므로 Transaction 처리를 해야 한다. (여기서는 3개의 DML 처리가 일어남)
+	// >>>>> 트랜잭션처리를 해야할 메소드에 @Transactional 어노테이션을 설정하면 된다. 
+	// rollbackFor={Throwable.class} 은 롤백을 해야할 범위를 말하는데 Throwable.class 은 error 및 exception 을 포함한 최상위 루트이다. 즉, 해당 메소드 실행시 발생하는 모든 error 및 exception 에 대해서 롤백을 하겠다는 말이다.
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})  // 오류가 포함되면은 무조건 롤백한다는 것 
+	public int addComment(CommentVO commentvo)  throws Throwable {
+		
+		int n = 0, m = 0, result = 0;
+		
+		n = dao.addComment(commentvo);   //댓들 쓰기(tbl_comment 테이블에  insert)
+		System.out.println("~~~확인용 n : " + n);
+		// ~~~확인용 n : 1
+		
+		if(n==1) {
+			m = dao.updateCommentCount(commentvo.getParentSeq());    // tbl_board 테이블에 commentCount 컬럼이 1증가(update) 하도록 요청한다.
+											// 부모의 글번호를 넘긴다.(getParentSeq)
+			System.out.println("!!! 확인용 m : " + m);
+			// !!! 확인용 m : 1
+		}
+		
+		// 회원 포인트 부분
+		if(m==1)
+		{
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("userid", commentvo.getFk_userid());   // vo에 있는 userid 값을 map 에 저장 
+			paraMap.put("point", "50");  // tbl_member 테이블의 포인트 컬럼의 값을 50점을 증가하도록 한다(update).
+			  // "" 는 어떤 타입이든 호환이 다 됨
+			
+			result = dao.updateMemberPoint(paraMap);
+			
+			System.out.println("+++ 확인용 result : " + result);
+			// +++ 확인용 result : 1
+		}
+		
+		return result;
+		
+	}
+
+	
+	
+}
