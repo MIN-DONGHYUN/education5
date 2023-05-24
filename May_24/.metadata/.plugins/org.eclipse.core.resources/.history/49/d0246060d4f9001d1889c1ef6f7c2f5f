@@ -1,0 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<style type="text/css">
+
+   table#emptbl {
+      width: 100%;
+   }
+   
+   table#emptbl th, table#emptbl td {
+      border: solid 1px gray;
+      border-collapse: collapse;
+   }
+   
+   table#emptbl th {
+      text-align: center;
+      background-color: #ccc;
+   }
+   
+   form {
+      margin: 0 0 30px 0;
+   }
+   
+</style> 
+
+<script type="text/javascript">
+
+   $(document).ready(function(){
+      
+      // 검색하기 버튼 클릭시
+      
+      
+      
+      // ======== 체크박스 유지시키기 시작 ======== //
+      
+      // ======== 체크박스 유지시키기 끝 ======== //
+      
+      
+      // ======== 성별 유지시키기 시작 ======== //
+      
+      // ======== 성별 유지시키기 끝 ======== //
+      
+      
+      
+      // ====== Excel 파일로 다운받기 시작 ====== //
+      
+      // ====== Excel 파일로 다운받기 끝 ====== //
+      
+      
+      // ====== Excel 파일로 업로드하기 시작 ====== //
+      
+      
+      // ====== Excel 파일로 업로드하기 끝 ====== //
+      
+   });// end of $(document).ready(function(){})-----------------------
+
+</script>   
+
+
+<div style="display: flex; margin-bottom: 50px;">   
+<div style="width: 80%; min-height: 1100px; margin:auto; ">
+
+   <h2 style="margin: 50px 0;">HR 사원정보 조회하기</h2>
+
+   <form name="searchFrm">
+       <c:if test="${not empty requestScope.deptIdList}">
+       		<c:forEach var="deptId" items="${requestScope.deptIdList}" varStatus="status">
+       			 <label for="">
+       			 	<c:if test="${deptId == -9999}">부서없음</c:if>
+       			 	<c:if test="${deptId != -9999}">${deptId}</c:if>
+       			 </label>
+       			 <input type="checkbox" name="deptId" id="" value="${deptId}"/>&nbsp;&nbsp;
+       		</c:forEach>
+       </c:if>
+   </form>
+   
+   <br/>
+   
+   <!-- ==== 엑셀관련파일 업로드 하기 시작 ==== -->
+   
+   <!-- ==== 엑셀관련파일 업로드 하기 끝 ==== -->
+   
+   <table id="emptbl">
+      <thead>
+         <tr>
+            <th>부서번호</th>
+            <th>부서명</th>
+            <th>사원번호</th>
+            <th>사원명</th>
+            <th>입사일자</th>
+            <th>월급</th>
+            <th>성별</th>
+            <th>나이</th>
+         </tr>
+      </thead>
+      <tbody> 
+      
+      </tbody>
+   </table>     
+</div>
+</div>
