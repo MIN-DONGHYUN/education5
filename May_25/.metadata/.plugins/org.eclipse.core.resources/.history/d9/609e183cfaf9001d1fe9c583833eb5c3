@@ -1,0 +1,23 @@
+package com.spring.watcha.mindh.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.spring.watcha.mindh.service.InterWatchaService1;
+
+public class WatchaController1 {
+	
+	@Autowired 
+	private InterWatchaService1 service ; 
+	
+	@RequestMapping(value="/view/Main.action")
+	public String main() {
+		
+		return "main";
+		// /WEB-INF/views/Main.jsp
+	}	
+   
+	
+
+}

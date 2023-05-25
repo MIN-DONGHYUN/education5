@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="org.eclipse.egit.ui.internal.clone.GitSelectWizardPageWizardSel" value="0"/>
+	<list key="RepositorySelectionPage.UsedUris">
+		<item value="https://github.com/kingkinguser/FinalProject_WatchaP.git"/>
+		<item value="https://github.com/kingkinguser/FinalProject_watcha.git"/>
+	</list>
+	<list key="EGit.KnownHosts">
+		<item value="bitbucket.org"/>
+		<item value="git.eclipse.org"/>
+		<item value="github.com"/>
+	</list>
+	<list key="CommitDialog.authorValues">
+		<item value="MIN-DONGHYUN &lt;mdh2057@naver.com&gt;"/>
+	</list>
+	<list key="CommitDialog.committerValues">
+		<item value="MIN-DONGHYUN &lt;mdh2057@naver.com&gt;"/>
+	</list>
+	<section name="GitImportWizard">
+		<item key="GitProjectsImportPage.STORE_NESTED_PROJECTS" value="true"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.staging.StagingView">
+		<item key="HORIZONTAL_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="STAGING_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="sortItemState" value="false"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.pull.PullResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="574"/>
+		<item key="DIALOG_Y_ORIGIN" value="358"/>
+		<item key="DIALOG_WIDTH" value="554"/>
+		<item key="DIALOG_HEIGHT" value="334"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.dialogs.MergeTargetSelectionDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="465"/>
+		<item key="DIALOG_Y_ORIGIN" value="10"/>
+		<item key="DIALOG_WIDTH" value="613"/>
+		<item key="DIALOG_HEIGHT" value="757"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.merge.MergeResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="537"/>
+		<item key="DIALOG_Y_ORIGIN" value="350"/>
+		<item key="DIALOG_WIDTH" value="468"/>
+		<item key="DIALOG_HEIGHT" value="246"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+	<section name="GitCommitMessageComponent">
+	</section>
+	<section name="org.eclipse.egit.ui.internal.push.PushResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="385"/>
+		<item key="DIALOG_Y_ORIGIN" value="194"/>
+		<item key="DIALOG_WIDTH" value="668"/>
+		<item key="DIALOG_HEIGHT" value="481"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+		<list key="sashWeights">
+			<item value="600"/>
+			<item value="400"/>
+		</list>
+	</section>
+</section>

@@ -1,0 +1,571 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+    String ctxPath = request.getContextPath();
+%>     
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Main</title>
+
+<!-- slick 이용하기 위한 링크 -->
+<script src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+
+<style type="text/css">
+  .main-h5 {
+    font-weight: bold;
+    text-align: left;
+    left: 13px;
+    position: relative;
+  }
+  
+  .main-h5-2 {
+  	margin-top: 40px;
+  }
+  
+  .main-ad-span {
+  	font-size: 10pt;
+  	padding-left: 10px;
+  	display: block;
+  }
+  
+  .centered-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+  
+  .main-card{
+  	text-align: left;
+  }
+  .card {
+  	border: none;
+  }
+  
+  
+  .card-body {
+  	padding: 10px 0 0 0;
+  }
+  
+  .carousel-item .card-img-top {
+     width: 250px;
+    height: 250px;
+    object-fit: unset;
+}
+  
+  
+  
+  @media (max-width: 768px) {
+	    .carousel-inner .carousel-item > div {
+		    display: none;
+		  }
+		  .carousel-inner .carousel-item > div:nth-child(-n+2) {
+		    display: block;
+		  }
+		  .main-ad-btn{
+			position: relative; 
+			bottom: 35px;
+			margin-left: 10px;
+		}
+		  
+	}
+	
+	.carousel-inner .carousel-item.active,
+	.carousel-inner .carousel-item-next,
+	.carousel-inner .carousel-item-prev {
+	    display: flex;
+	}
+	
+	/* display 3 */
+	@media (min-width: 768px) {
+		.main-ad-div {
+		  	display: flex;
+		}
+		.main-ad-btn{
+			margin: 10% 5% 5% 5%; 
+			width: 92%;
+		}
+	}
+	
+	
+	
+	
+	/* ////////////////////////////////////////////////////// */
+
+  
+</style>
+
+
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	let resizeTimer;
+	$(window).on('resize', function() {    // 창 크기가 빠르게 변경되면 안되는 현상을 고치기 위해 타임아웃 사용
+	    clearTimeout(resizeTimer);
+	    resizeTimer = setTimeout(function() {
+	        CarouselGO();
+	    }, 200); // 200ms의 딜레이를 사용하여 타임아웃 설정
+	});
+	Carousel();
+	CarouselGO();
+	$("button.slick-prev").show;
+	$("button.slick-next").show;
+});
+		
+function Carousel(){
+	
+    $('.main-carousel-card').slick({
+    	  dots: false,     /* 밑에 점으로 표시되는것  */
+    	  infinite: false,  /* 반복할것인지 파악하기 */
+    	  speed: 300,		/* 슬라이드 스피드 */
+    	  slidesToShow: 5,	/* 몇개씩 보여줄것인지 파악 */
+    	  slidesToScroll: 5,	/* 몇개씩 넘길것인지 파악 */
+    	  responsive: [
+    	    {
+    	      breakpoint: 1024,		/* 사이즈가 1024 보다 작으면 시작 */
+    	      settings: {  
+      	        dots: false,
+      	        infinite: false,  
+    	    	slidesToShow: 4,
+    	        slidesToScroll: 4
+    	      }
+    	    },
+    	    {
+    	      breakpoint: 768,
+    	      settings: {
+    	    	dots: false,
+        	    infinite: false,   
+    	        slidesToShow: 2,
+    	        slidesToScroll: 2
+    	      }
+    	    }
+
+    	  ]
+    	});	
+}
+
+function CarouselGO()
+{
+
+	// 슬라이드 버튼 CSS 적용하기 1	    
+	$("button.slick-prev").html('<h4><</h4>');
+	$("button.slick-prev").css('color','#666');
+	$("button.slick-prev").eq(0).addClass("btn-first");
+	$("button.slick-prev").eq(1).addClass("btn-second");		
+	   
+    
+    
+ // 슬라이드 버튼 CSS 적용하기 2	    
+	$("button.slick-next").html('<h4>></h4>');
+	$("button.slick-next").css('color','#666');
+	$("button.slick-next").eq(0).addClass("btn-first");
+	$("button.slick-next").eq(1).addClass("btn-second");
+}		
+
+
+</script>
+
+</head>
+<body>
+
+<div class="container" style="padding: 0;">
+   <h5 class="h5 main-h5">박스 오피스 순위</h5>
+   
+	<div class="container my-5">
+
+		<div class="card-deck main-carousel-card mb-5">
+		  
+		  <div class="card">
+		    <img src="<%= ctxPath%>/resources/images/콩.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title card-font" >랭닭 MD의 소울 푸드</h5>
+		      <p class="card-text"><span class="text-muted">닭가슴살 몬스터 볶음밥</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품2.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body ">
+		      <h5 class="card-title  card-font">1팩 2천원 대 가성비 샐러드</h5>
+		      <p class="card-text"><span class="text-muted">1am 알뜰샐러드</span></p>
+		    </div>
+		  </div>
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품3.jpg" class="card-img-top  card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">소스 닭가슴살계의 끝판왕</h5>
+		      <p class="card-text"><span class="text-muted">한입 소스 닭가슴살</span></p>
+		    </div>
+		  </div>
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품4.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title card-font">슬기로운 식단 최대 31%할인</h5>
+		      <p class="card-text"><span class="text-muted">4월 한정 MD 패키지</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품5.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">한 팩으로 충전하는 단백질 22g</h5>
+		      <p class="card-text"><span class="text-muted">프로틴러쉬 드링크</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품6.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">푸짐하게 더 담아드려요</h5>
+		      <p class="card-text"><span class="text-muted">닭가슴살 도시락</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품7.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">30개의 달걀 흰자를 간편하게</h5>
+		      <p class="card-text"><span class="text-muted">100% 순수 난백</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품8.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">판매량으로 증명된 No.1</h5>
+		      <p class="card-text"><span class="text-muted">닭가슴살 스테이크</span></p>
+		    </div>
+		  </div>
+		  
+		 <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품9.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">풍미 가득 치즈를 가득</h5>
+		      <p class="card-text"><span class="text-muted">닭가슴살 볼</span></p>
+		    </div>
+		  </div>
+		  
+		 <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품10.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">가마 안에서 8시간 구워낸</h5>
+		      <p class="card-text"><span class="text-muted">구운란&amp;훈제란</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품11.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title  card-font">처음 만나는 바삭함</h5>
+		      <p class="card-text"><span class="text-muted">크리스피 닭가슴살</span></p>
+		    </div>
+		  </div>
+		  
+		  <div class="card">
+		    <img src="<%=ctxPath%>/images/추천상품12.jpg" class="card-img-top card-size" alt="...">
+		    <div class="card-body">
+		      <h5 class="card-title card-font">당류 ZERO! 톡-쏘는 청량감!</h5>
+		      <p class="card-text"><span class="text-muted">0kcal 스파클링</span></p>
+		    </div>
+		  </div>
+		  
+		
+		  
+		  
+		</div>
+	</div>	    
+	
+	
+	<h5 class="h5 main-h5 main-h5-2">2023 문화다양성 큐레이션 영상 콘텐츠</h5>
+   	<div class="row mx-auto my-auto">
+        <div id="recipeCarousel2" class="carousel slide w-100" data-ride="carousel">
+            <div class="carousel-inner w-100" role="listbox">
+                <div class="carousel-item active">
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Koala_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">1</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">2</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">3</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">4</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">5</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">6</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">7</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">8</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                </div>
+
+				 <div class="carousel-item">
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">9</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">10</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                </div>    
+
+
+            </div>
+               
+              
+            <a class="carousel-control-prev w-auto" href="#recipeCarousel2" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next w-auto" href="#recipeCarousel2" role="button" data-slide="next">
+                <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+	    </div>
+	</div>	    
+	
+	<%-- 광고 부분 --%>	   
+	<div style="margin: 30px 0 ;">
+		<div style="max-width: 60%; margin: 0px auto; text-align: left; border: solid 1px black;">
+			<section>
+				<div class="main-ad-div">
+					<a href="https://www.frombio.co.kr/product/detail.html?product_no=797&cate_no=101&display_group=1&utm_source=watcha&utm_medium=da&utm_campaign=100deal&browser_open_type=external">
+						<img src="./images/광고.png" style="width: 100%; height: 100%;">	
+					</a>
+					<div class="centered-container">
+					  <a href="https://www.frombio.co.kr/product/detail.html?product_no=797&cate_no=101&display_group=1&utm_source=watcha&utm_medium=da&utm_campaign=100deal&browser_open_type=external" style="padding: 5%">
+					    <span class="main-ad-span">프롬바이오 100원 딜!</span>
+					    <span class="main-ad-span">오직 여디서만,</span>
+					    <span class="main-ad-span">건강즙이 100원</span>
+					    <img src="./images/광고1.png">
+					    <button type="button" class="btn btn-danger main-ad-btn">구매하기</button>
+					  </a>
+					</div>
+
+				</div>
+			</section>
+		</div>
+	</div>
+	
+	<%-- 다시 캐러셀 --%>
+	
+	<h5 class="h5 main-h5 main-h5-3">2023 문화다양성 큐레이션 영상 콘텐츠</h5>
+   	<div class="row mx-auto my-auto">
+        <div id="recipeCarousel3" class="carousel slide w-100" data-ride="carousel">
+            <div class="carousel-inner w-100" role="listbox">
+                <div class="carousel-item active">
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Koala_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">1</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">2</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">3</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">4</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">5</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">6</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">7</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">8</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                </div>
+
+				 <div class="carousel-item">
+                    <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Lighthouse_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">9</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3">
+                        <div class="card"> <!-- 18rem 은 font size의 18배 크기임. 즉, 상대적 크기임. 만약에 width: 280px; 으로 하면 px 이므로 고정 크기임. -->  
+                            <img class="img-fluid card-img-top" src="./images/Penguins_multiple.jpg">
+                            <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">10</p>
+						    <a href="#" class="btn btn-primary">See Detail</a>
+						  </div>
+                        </div>
+                    </div>
+                </div>    
+
+
+            </div>
+               
+              
+            <a class="carousel-control-prev w-auto" href="#recipeCarousel3" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next w-auto" href="#recipeCarousel3" role="button" data-slide="next">
+                <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+	    </div>
+	</div>	
+		    
+		    
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+package com.spring.watcha.mindh.service;
+
+public class WatchaService1 implements InterWatchaService1 {
+
+}

@@ -1,0 +1,12 @@
+package com.spring.watcha.mindh.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.spring.watcha.service.InterWatchaService;
+
+public class WatchaController1 {
+	
+	@Autowired 
+	private InterWatchaService1 service ; 
+
+}
