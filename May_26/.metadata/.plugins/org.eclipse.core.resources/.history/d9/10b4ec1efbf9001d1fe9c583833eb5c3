@@ -1,0 +1,13 @@
+package com.spring.watcha.mindh.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.spring.watcha.mindh.model.InterWatchaDAO1;
+
+public class WatchaService1 implements InterWatchaService1 {
+	 
+	@Autowired
+	private InterWatchaDAO1 dao;
+
+
+}

@@ -1,0 +1,21 @@
+package com.spring.watcha.mindh.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.spring.watcha.mindh.service.InterWatchaService1;
+
+public class WatchaController1 {
+	
+	@Autowired 
+	private InterWatchaService1 service ; 
+	
+	@RequestMapping(value="/view/project_detail.action")
+	public String project_detail() {
+		
+		return "project_detail.tiles";
+		// /WEB-INF/views/tiles1/tiles1/tiles_test
+	}	
+   // ==== ***** project_detail tiles 끝 ***** ==== // 
+
+}

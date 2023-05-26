@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hr">
+
+	<!-- DAO에서 id값 가져옴 test_insert -->
+	<insert id="test_insert">
+	
+		insert into spring_exam(no, name, address, writeday)
+		values(901, '이순신', '서울시 마포구', default)
+		
+	</insert>
+	
+	
+	<select id="deptIdList" resultType="String">
+		select distinct nvl(department_id, -9999) as department_id
+		from employees
+		order by department_id asc
+	</select>
+
+	<!-- resultMap 을 설정한다.  -->
+	<resultMap type="HashMap" id="empDeptMap">
+		<result property="department_id"   column="department_id" javaType="String"/>   <!-- property가 HashMap Key이다. -->
+		<result property="department_name" column="department_name" javaType="String"/>
+		<result property="employee_id"     column="employee_id" javaType="String"/>
+		<result property="fullname"        column="fullname" javaType="String"/>
+		<result property="hire_date"       column="hire_date" javaType="String"/>
+		<result property="monthsal"        column="monthsal" javaType="String"/>
+		<result property="gender"          column="gender" javaType="String"/>
+		<result property="age"             column="age" javaType="String"/>
+	</resultMap>
+
+
+	<select id="empList" parameterType="HashMap" resultMap="empDeptMap">   <!-- resultMap은 Map을 쓸때 사용 resultType는 VO만 가능  -->
+	   select E.department_id, D.department_name, E.employee_id,
+	          E.first_name || ' ' || E.last_name AS fullname,
+	          to_char(E.hire_date, 'yyyy-mm-dd') AS hire_date,
+	          nvl(E.salary + E.salary*E.commission_pct, E.salary) AS monthsal,
+	          func_gender(E.jubun) AS gender,
+	          func_age(E.jubun) AS age
+	   from employees E left join departments D
+	   on E.department_id = D.department_id
+	   where 1=1 
+	   <if test="arr_DeptId != null">
+	   		and nvl(E.department_id, -9999) in 
+	   		<foreach collection="arr_DeptId" index="i" open="(" separator="," close=")">  <!-- collection 은 HashMap 의 키값이 온다  (배열,LIST)만 온다 -->
+	   			'${arr_DeptId[i]}'
+	   		</foreach>		
+	   </if>
+	   <if test="gender != null">
+	   	    and func_gender(E.jubun) = #{gender}
+	   </if>
+	   order by E.department_id, E.employee_id
+	</select>
+	
+	
+	<!-- === Excel 파일을 업로드 하면 엑셀데이터를 데이터베이스 테이블에 insert 해주는 예제 === -->
+	<insert id="addEmp" parameterType="HashMap">
+		insert into employees(EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, HIRE_DATE, JOB_ID, SALARY, COMMISSION_PCT, MANAGER_ID, DEPARTMENT_ID, JUBUN) 
+        values(to_number(#{EMPLOYEE_ID}), #{FIRST_NAME}, #{LAST_NAME}, #{EMAIL}, #{PHONE_NUMBER}, to_date(#{HIRE_DATE}, 'yyyy-mm-dd'), #{JOB_ID}, to_number(#{SALARY}), to_number(#{COMMISSION_PCT}), to_number(#{MANAGER_ID}), to_number(#{DEPARTMENT_ID}), #{JUBUN})
+	</insert>
+		
+		
+	<!-- // === employees 테이블에서 부서명별 인원수 및 퍼센티지 가져오기 === // -->	
+	<resultMap type="HashMap" id="employeeCntByDeptname_Map">
+		<result property="department_name"   column="department_name" javaType="String" />
+		<result property="cnt"               column="cnt"             javaType="String" />
+		<result property="percentage"        column="percentage"      javaType="String" />
+	</resultMap>	
+	<select id="employeeCntByDeptname" resultMap="employeeCntByDeptname_Map">
+		select nvl(D.department_name, '부서없음') AS department_name
+		      , count(*) AS cnt
+		      , round(count(*)/(select count(*) from employees)*100, 2) AS percentage
+		from employees E left join departments D
+		on E.department_id = D.department_id
+		group by D.department_name
+		order by cnt desc, department_name asc
+	</select>	
+	
+	
+	<!-- // === employees 테이블에서 성별 인원수 및 퍼센티지 가져오기 === // -->
+	<resultMap type="HashMap" id="employeeCntByGender_Map">
+		<result property="gender"   column="gender" javaType="String" />
+		<result property="cnt"               column="cnt"             javaType="String" />
+		<result property="percentage"        column="percentage"      javaType="String" />
+	</resultMap>	
+	<select id="employeeCntByGender" resultMap="employeeCntByGender_Map">
+		select func_gender(E.jubun) AS gender
+		      , count(*) AS cnt
+		      , round(count(*)/(select count(*) from employees)*100, 2) AS percentage
+		from employees E left join departments D
+		on E.department_id = D.department_id
+		group by func_gender(E.jubun)
+		order by cnt desc, gender asc
+	</select>
+	
+	
+		
+</mapper>
