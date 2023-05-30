@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+<typeInfo handle="=Board/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.spring.board.model{InterBoardDAO.java[InterBoardDAO" modifiers="513" timestamp="1684888328195"/>
+<typeInfo handle="=Board/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.spring.board.service{InterBoardService.java[InterBoardService" modifiers="513" timestamp="1684888345899"/>
+<typeInfo handle="=Board/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.spring.product.service{InterBoardService.java[InterBoardService" modifiers="513" timestamp="1684479817536"/>
+<typeInfo handle="=Board/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.spring.employees.service{InterEmpService.java[InterEmpService" modifiers="513" timestamp="1685071672335"/>
+<typeInfo handle="=Board/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.spring.employees.model{InterEmpDAO.java[InterEmpDAO" modifiers="513" timestamp="1685071796676"/>
+</typeInfoHistroy>

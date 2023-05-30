@@ -1,0 +1,44 @@
+package com.spring.watcha.common;
+
+public class MovieVO {
+	
+	private String movie_id;          // 댓글번호
+	private String movie_title;    // 사용자ID
+	private String overview;         // 성명
+    private String original_language;      // 댓글내용
+    private String original_title;      // 작성일자
+    private String release_date;    // 원게시물 글번호
+    private String tagline;       // 글삭제여부
+    private int runtime;
+    private String poster_path;
+    private String backdrop_path;
+    private int rating_count;
+    private int rating_avg;  
+    
+    
+    public MovieVO(){};
+	   
+    public MovieVO(String movie_id, String movie_title, String overview, String original_language, String original_title, String release_date,
+  		  String tagline, int runtime, String poster_path, String backdrop_path, int rating_count, int rating_avg) {
+	
+	this.movie_id = movie_id;
+	this.movie_title = movie_title;
+	this.overview = overview;
+	this.original_language = original_language;
+	this.original_title = original_title;
+	this.release_date = release_date;
+	this.tagline = tagline;
+	this.tagline = runtime;
+	this.tagline = poster_path;
+	this.tagline = backdrop_path;
+	this.tagline = rating_count;
+	this.tagline = rating_avg;
+	}
+
+
+
+	   
+	   
+	   
+	   
+}

@@ -1,0 +1,22 @@
+package com.spring.watcha.common;
+
+public class Movie_roleVO {
+
+	private String movie_id;
+	private String actor_id;
+	private String role;
+	private int casting_order;
+	
+	
+	private Movie_roleVO(){};
+	
+	public Movie_roleVO(String movie_id, String actor_id, String role, int casting_order) {
+		 
+		this.movie_id = movie_id;
+		this.actor_id = actor_id;
+		this.role = role;
+		this.casting_order = casting_order;
+	}
+	
+	
+}

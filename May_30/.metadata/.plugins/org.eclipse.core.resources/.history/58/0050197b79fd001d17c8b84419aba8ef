@@ -1,0 +1,30 @@
+package com.spring.watcha.service;
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.spring.watcha.common.AES256;
+import com.spring.watcha.common.MovieVO;
+import com.spring.watcha.model.InterWatchaDAO;
+
+
+@Service
+public class WatchaService implements InterWatchaService {
+	
+    @Autowired
+    private InterWatchaDAO dao;
+
+    @Autowired
+    private AES256 aes;
+
+   // 평점순 으로 30개 나타내기(평점 평가가 기본적으로 10개 이상일때  ) 
+	@Override
+	public List<MovieVO> starRank() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+		
+}

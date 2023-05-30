@@ -1,0 +1,12 @@
+package com.spring.watcha.mindh.model;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
+public class WatchaDAO implements InterWatchaDAO {
+
+	
+	@Resource
+	private SqlSessionTemplate sqlsession_1; 
+}

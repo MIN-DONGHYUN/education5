@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="watchamin">
+
+	<select id="starRank" resultType="com.spring.watcha.common.MovieVO">
+		SELECT *
+		FROM (
+		  SELECT movie_title, original_language, CONCAT('20', release_date) AS release_date, poster_path, rating_count, rating_avg
+		  FROM Movie
+		  <!-- WHERE rating_count > 9 -->
+		  ORDER BY rating_avg ASC
+		) WHERE ROWNUM <= 30;
+	</select>
+				    
+</mapper>

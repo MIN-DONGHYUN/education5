@@ -1,0 +1,12 @@
+package com.spring.watcha.mindh.service;
+
+import java.util.List;
+
+import com.spring.watcha.common.MovieVO;
+
+public interface InterWatchaService {
+
+	// 평점순 으로 30개 나타내기(평점 평가가 기본적으로 10개 이상일때  ) 
+	List<MovieVO> starRank();
+
+}

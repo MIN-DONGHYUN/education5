@@ -1,0 +1,11 @@
+package com.spring.watcha.mindh.controller;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class WatchaController {
+
+	
+	
+	
+}
