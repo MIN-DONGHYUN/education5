@@ -1,0 +1,138 @@
+package com.spring.watcha.common;
+
+public class MovieVO {
+	
+	private String movie_id;          // 댓글번호
+	private String movie_title;    // 사용자ID
+	private String overview;         // 성명
+    private String original_language;      // 댓글내용
+    private String original_title;      // 작성일자
+    private String release_date;    // 원게시물 글번호
+    private String tagline;       // 글삭제여부
+    private String runtime;
+    private String poster_path;
+    private String backdrop_path;
+    private String rating_count;
+    private String rating_avg;  
+    
+    
+    public MovieVO(){};
+	   
+    public MovieVO(String movie_id, String movie_title, String overview, String original_language, String original_title, String release_date,
+  		  String tagline, String runtime, String poster_path, String backdrop_path, String rating_count, String rating_avg) {
+	
+	this.seq = seq;
+	this.fk_userid = fk_userid;
+	this.name = name;
+	this.content = content;
+	this.regDate = regDate;
+	this.parentSeq = parentSeq;
+	this.status = status;
+	}
+
+
+	public String getSeq() {
+		return seq;
+	}
+
+
+	public void setSeq(String seq) {
+		this.seq = seq;
+	}
+
+
+	public String getFk_userid() {
+		return fk_userid;
+	}
+
+
+	public void setFk_userid(String fk_userid) {
+		this.fk_userid = fk_userid;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+
+	public String getRegDate() {
+		return regDate;
+	}
+
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
+
+	public String getParentSeq() {
+		return parentSeq;
+	}
+
+
+	public void setParentSeq(String parentSeq) {
+		this.parentSeq = parentSeq;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getOrgFilename() {
+		return orgFilename;
+	}
+
+	public void setOrgFilename(String orgFilename) {
+		this.orgFilename = orgFilename;
+	}
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
+	   
+	   
+	   
+	   
+}

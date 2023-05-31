@@ -1,0 +1,25 @@
+package com.spring.watcha.mindh.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.spring.watcha.common.MovieVO;
+import com.spring.watcha.mindh.model.InterWatchaDAO;
+
+public class WatchaService implements InterWatchaService {
+	 
+	@Autowired
+	private InterWatchaDAO dao;
+
+	// 평점순 으로 30개 나타내기(평점 평가가 기본적으로 10개 이상일때  ) 
+	@Override
+	public List<MovieVO> starRank() {
+		
+		List<MovieVO> starRankvo = dao.starRank();
+		
+		return null;
+	}
+
+
+}

@@ -1,0 +1,30 @@
+package com.spring.watcha.mindh.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.spring.watcha.mindh.service.InterWatchaService;
+
+@Controller
+public class WatchaController {
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(WatchaController.class);
+	
+	@Autowired 
+	private InterWatchaService service ; 
+	
+
+   
+	@RequestMapping(value="/view/main.action")
+	public ModelAndView Main(ModelAndView mav) {
+		
+		System.out.println("하이하이 ");
+		mav.setViewName("main");  // tiles 가 아니므로 1순위가 아니고 2순위인 접두어, 접미어를 만든다. 
+		//  /WEB-INF/views/test/test10.jsp 이 페이지를 만들어야 한다.
+		return mav;
+	}
+
+}

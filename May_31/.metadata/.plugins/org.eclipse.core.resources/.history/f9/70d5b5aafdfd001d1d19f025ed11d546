@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="watchamin">
+
+	<select id="starRank" resultType="com.spring.watcha.common.MovieVO">
+		 <![CDATA[
+		    SELECT  movie_title, original_language, release_date, poster_path, rating_count, rating_avg
+			FROM (
+			  SELECT ROWNUM, movie_title, original_language, CONCAT('20', release_date) AS release_date, poster_path, rating_count, rating_avg
+			  FROM Movie
+			  
+			) 
+			WHERE ROWNUM <= 30
+			ORDER BY rating_avg desc
+		  ]]>
+	</select>
+	
+	<!-- FROM Movie 뒤에 where rating_count > 9  사용하면 됨 -->
+	
+	
+	<select id="seeRank" resultType="com.spring.watcha.common.MovieVO">
+		 SELECT m.movie_id, m.movie_title, m.original_language, m.release_date, m.poster_path, m.rating_avg, COUNT(*) OVER (PARTITION BY w.movie_id) AS movie_count
+FROM (
+  SELECT movie_id, movie_title, original_language, CONCAT('20', release_date) AS release_date, poster_path, rating_count, rating_avg
+  FROM Movie
+) m
+JOIN (
+  SELECT watch_list_id, user_id, movie_id, watch_list_date, COUNT(*) OVER (PARTITION BY movie_id) AS movie_count
+  FROM watch_list
+) w
+ON m.movie_id = w.movie_id
+ORDER BY w.movie_count DESC;
+	</select>
+	
+				    
+</mapper>

@@ -1,0 +1,5 @@
+package com.spring.watcha.mindh.model;
+
+public class WatchaDAO1 implements InterWatchaDAO1 {
+
+}

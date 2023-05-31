@@ -1,0 +1,32 @@
+package com.spring.watcha.mindh.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.spring.watcha.common.MovieVO;
+
+@Controller
+public class WatchaController {
+
+	@Autowired 
+	private com.spring.watcha.mindh.service.InterWatchaService service ; 
+	
+	@RequestMapping(value="/view/main.action")
+	public String main() {
+		
+		List<MovieVO> starRankvo = service.starRank();
+		
+		
+		for(MovieVO vo : starRankvo) {
+			System.out.println(vo);
+		}
+		
+		return "main.tiles";
+		// /WEB-INF/views/tiles1/tiles1/tiles_test
+	}	
+	
+	
+}

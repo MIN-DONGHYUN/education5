@@ -1,0 +1,18 @@
+package com.spring.watcha.common;
+
+public class Movie_role {
+
+	private String movie_id;
+	private String actor_id;
+	private String role;
+	private int casting_order;
+	
+	
+	private Movie_role(){};
+	
+	 public Movie_role(String movie_id, String movie_title, String overview, String original_language, String original_title, String release_date,
+	  		  String tagline, int runtime, String poster_path, String backdrop_path, int rating_count, int rating_avg) {
+		
+	
+	
+}

@@ -1,0 +1,5 @@
+package com.spring.watcha.common;
+
+public class Movie_genre {
+
+}

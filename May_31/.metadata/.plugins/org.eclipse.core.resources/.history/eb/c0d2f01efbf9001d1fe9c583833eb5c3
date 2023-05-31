@@ -1,0 +1,5 @@
+package com.spring.watcha.mindh.model;
+
+public interface InterWatchaDAO1 {
+
+}

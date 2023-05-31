@@ -1,0 +1,27 @@
+package com.spring.watcha.mindh.model;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
+import com.spring.board.model.TestVO;
+import com.spring.watcha.common.MovieVO;
+
+public class WatchaDAO implements InterWatchaDAO {
+
+	
+	@Resource
+	private SqlSessionTemplate sqlsession_1;
+
+	// 평점순 으로 30개 나타내기(평점 평가가 기본적으로 10개 이상일때  ) 
+	@Override
+	public List<MovieVO> starRank() {
+		
+		List<MovieVO> testvoList = sqlsession.selectList("board.test_select");
+		
+		
+		return testvoList;
+	} 
+}
