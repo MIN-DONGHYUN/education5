@@ -1,0 +1,127 @@
+package com.spring.chatting.websockethandler;
+
+import java.util.*;
+
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.spring.board.model.MemberVO;
+
+// === #198. (웹채팅관련8)
+public class WebsocketEchoHandler extends TextWebSocketHandler {
+
+	// === 웹소켓서버에 연결한 클라이언트 사용자들을 저장하는 리스트 ===
+    private List<WebSocketSession> connectedUsers = new ArrayList<>();
+   
+    // init-method
+    public void init() throws Exception { }
+    
+   
+    // === 클라이언트가 웹소켓서버에 연결했을때의 작업 처리하기 ===
+    /*
+       afterConnectionEstablished(WebSocketSession wsession) 메소드는 
+              클라이언트가 웹소켓서버에 연결이 되어지면 자동으로 실행되는 메소드로서
+       WebSocket 연결이 열리고 사용이 준비될 때 호출되어지는(실행되어지는) 메소드이다.
+    */
+	
+    @Override
+    public void afterConnectionEstablished(WebSocketSession wsession) throws Exception{
+    	// >>> 파라미터 WebSocketSession wsession 은 웹소켓서버에 접속한 클라이언트 사용자임. <<<
+    	// 웹소켓서버에 접속한 클라이언트의 IP Address 얻어오기
+        /*
+          STS 메뉴의 
+          Run --> Run Configuration 
+              --> Arguments 탭
+              --> VM arguments 속에 맨 뒤에
+              --> 한칸 띄우고 -Djava.net.preferIPv4Stack=true 
+                          을 추가한다.  
+        */
+    	
+       // System.out.println("====> 웹채팅확인용 : " + wsession.getId() + "님이 접속했습니다.");
+       // ====> 웹채팅확인용 : 0님이 접속했습니다. 
+       // ====> 웹채팅확인용 : 1님이 접속했습니다.
+       // wsession.getId() 는 자동증가되는 고유한 숫자로 나옴.
+       
+       // System.out.println("====> 웹채팅확인용 : " + "연결 컴퓨터명 : " + wsession.getRemoteAddress().getHostName());
+       // ====> 웹채팅확인용 : 연결 컴퓨터명 : DESKTOP-QHPLVB1  (PC인 경우)
+       // ====> 웹채팅확인용 : 연결 컴퓨터명 : 192.168.0.64     (모바일인 경우)
+       
+       // System.out.println("====> 웹채팅확인용 : " + "연결 컴퓨터명 : " + wsession.getRemoteAddress().getAddress().getHostName());
+       // ====> 웹채팅확인용 : 연결 컴퓨터명 : DESKTOP-QHPLVB1
+       // ====> 웹채팅확인용 : 연결 컴퓨터명 : 192.168.0.64
+       
+       // System.out.println("====> 웹채팅확인용 : " + "연결 IP : " + wsession.getRemoteAddress().getAddress().getHostAddress()); 
+       // ====> 웹채팅확인용 : 연결 IP : 211.238.142.77
+       // ====> 웹채팅확인용 : 연결 IP : 192.168.0.64
+    	
+       connectedUsers.add(wsession);	
+       
+       ///// ===== 웹소켓 서버에 접속시 접속자명단을 알려주기 위한 것 시작 ===== /////
+       // Spring에서 WebSocket 사용시 먼저 HttpSession에 저장된 값들을 읽어와서 사용하기
+       /*
+                      먼저 /webapp/WEB-INF/spring/config/websocketContext.xml 파일에서
+           websocket:handlers 태그안에 websocket:handshake-interceptors에
+           HttpSessionHandshakeInterceptor를 추가하면 WebSocketHandler 클래스를 사용하기 전에 
+                     먼저 HttpSession에 저장되어진 값들을 읽어 들여 WebSocketHandler 클래스에서 사용할 수 있도록 처리해준다. 
+       */
+       
+       String connectingUserName = "「";  // 「 은 자음 ㄴ 하면 나온다.
+    	
+       for(WebSocketSession webSocketSession : connectedUsers) {
+    	   
+    	   Map<String, Object> map = webSocketSession.getAttributes();
+    	   /*
+	           webSocketSession.getAttributes(); 은 
+	           HttpSession에 setAttribute("키",오브젝트); 되어 저장되어진 값들을 읽어오는 것으로써,
+	                      리턴값은  "키",오브젝트로 이루어진 Map<String, Object> 으로 받아온다.
+	       */ 
+    	   
+    	   MemberVO loginuser = (MemberVO)map.get("loginuser");
+    	   // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
+    	   
+    	   connectingUserName += loginuser.getName() + " "; 
+    	   
+       } // end of  for(WebSocketSession webSocketSession : connectedUsers) 
+       
+       connectingUserName += "」";  //  」은 자음 ㄴ 하면 나온다.
+       
+       // System.out.println("확인용 connectingUserName : " + connectingUserName);
+       /*
+       	  확인용 connectingUserName : 「김유신 」
+		  확인용 connectingUserName : 「김유신 이순신 」
+		  확인용 connectingUserName : 「김유신 이순신 관리자 」
+       */
+       for(WebSocketSession webSocketSession : connectedUsers) {
+    	   webSocketSession.sendMessage(new TextMessage(connectingUserName));
+       } // end of for 
+       // 웹소캣 연결 끝?
+       
+    }
+	
+    // === 클라이언트가 웹소켓 서버로 메시지를 보냈을때의 Send 이벤트를 처리하기 ===
+    /*
+       handleTextMessage(WebSocketSession wsession, TextMessage message) 메소드는 
+                 클라이언트가 웹소켓서버로 메시지를 전송했을 때 자동으로 호출되는(실행되는) 메소드이다.
+                 첫번째 파라미터  WebSocketSession 은  메시지를 보낸 클라이언트임.
+             두번째 파라미터  TextMessage 은  메시지의 내용임.
+     */
+    @Override
+    public void handleTextMessage(WebSocketSession wsession, TextMessage message) thorws Exception(
+    		
+    
+    
+    // >>> 파라미터 WebSocketSession wsession은  웹소켓서버에 접속한 클라이언트임. <<<
+    // >>> 파라미터 TextMessage message 은  클라이언트 사용자가 웹소켓서버로 보낸 웹소켓 메시지임. <<<
+    
+    // Spring에서 WebSocket 사용시 먼저 HttpSession에 저장된 값들을 읽어와서 사용하기
+    /*
+           먼저 /webapp/WEB-INF/spring/config/websocketContext.xml 파일에서
+       websocket:handlers 태그안에 websocket:handshake-interceptors에
+         HttpSessionHandshakeInterceptor를 추가해주면 
+         WebSocketHandler 클래스를 사용하기 전에, 
+                  먼저 HttpSession에 저장되어진 값들을 읽어 들여, WebSocketHandler 클래스에서 사용할 수 있도록 처리해준다. 
+     */
+     wession		
+    )		
+}
