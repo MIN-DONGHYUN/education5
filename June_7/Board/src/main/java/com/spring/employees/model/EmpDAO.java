@@ -1,0 +1,94 @@
+package com.spring.employees.model;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class EmpDAO implements InterEmpDAO {
+
+	
+	@Resource
+	private SqlSessionTemplate sqlsession_2;    //SQL hr
+ 											  // 로컬 DB mymvc_user 에 연결 
+	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession bean 을  sqlsession 에 주입시켜준다. 
+    // 그러므로 sqlsession 는 null 이 아니다.
+	
+	@Resource
+	private SqlSessionTemplate sqlsession;   //MYMVC_user SQL 
+											   // 로컬 DB hr 에 연결 
+	// Type 에 따라 Spring 컨테이너가 알아서 root-context.xml 에 생성된 org.mybatis.spring.SqlSessionTemplate 의  sqlsession_2 bean 을  sqlsession_2 에 주입시켜준다. 
+    // 그러므로 sqlsession_2 는 null 이 아니다.
+
+	// employees 테이블에서 근무중인 사원들의 부서번호 가져오기 
+	@Override
+	public List<String> deptIdList() {
+		List<String> deptIdList = sqlsession_2.selectList("hr.deptIdList");
+		return deptIdList;
+	}
+
+	// employees 테이블에서 조건에 만족하는 사원들을 가져오기 
+	@Override
+	public List<Map<String, String>> empList(Map<String, Object> paraMap) {
+		List<Map<String, String>> empList = sqlsession_2.selectList("hr.empList", paraMap);
+		return empList;
+	}
+	
+	
+	// === Excel 파일을 업로드 하면 엑셀데이터를 데이터베이스 테이블에 insert 해주는 예제 === //
+	@Override
+	public int addEmpList(List<Map<String, String>> paraMapList) {
+		
+		int insert_count = 0;
+		
+		if(paraMapList != null && paraMapList.size() > 0) {
+			for( Map<String, String> paraMap: paraMapList) {
+				int n = sqlsession_2.insert("hr.addEmp", paraMap);
+				insert_count += n;   // 누적한다. 
+			}
+		}
+
+		return insert_count;
+	}
+
+	// === employees 테이블에서 부서명별 인원수 및 퍼센티지 가져오기 === //
+	@Override
+	public List<Map<String, String>> employeeCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = sqlsession_2.selectList("hr.employeeCntByDeptname");
+		return deptnamePercentageList;
+	}
+
+	// === employees 테이블에서 성별 인원수 및 퍼센티지 가져오기 === //
+	@Override
+	public List<Map<String, String>> employeeCntByGender() {
+		List<Map<String, String>> genderPercentageList = sqlsession_2.selectList("hr.employeeCntByGender");
+		return genderPercentageList;
+	}
+
+	// === employees 테이블에서 성별 입사년도별 인원수 가져오기 === //
+	@Override
+	public List<Map<String, String>> employeeCntByGenderHireYear() {
+		List<Map<String, String>> genderHireYearList = sqlsession_2.selectList("hr.employeeCntByGenderHireYear");
+		return genderHireYearList;
+	}
+
+	// === 특정 부서명에 근무하는 직원들의 성별 인원구 및 퍼센티지 가져오기 === //
+	@Override
+	public List<Map<String, String>> genderCntSpecialDeptname(String deptname) {
+		List<Map<String, String>> genderPercentageList = sqlsession_2.selectList("hr.genderCntSpecialDeptname", deptname);
+		return genderPercentageList;
+	}
+
+	// 인사관리 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 insert 하도록 한다. 
+	@Override
+	public void insert_accessTime(Map<String, String> paraMap) {
+		sqlsession.insert("board.insert_accessTime" , paraMap);
+		
+	}
+	
+	
+}

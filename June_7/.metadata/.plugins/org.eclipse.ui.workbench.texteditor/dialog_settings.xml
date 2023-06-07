@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="175"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="175"/>
+			<item value="177"/>
+			<item value="chART"/>
+			<item value="$(&quot;input#search_header&quot;).val()"/>
+			<item value="JSON.parse"/>
+			<item value="searchWords"/>
+			<item value="recentSearchWords"/>
+			<item value="@RequestParam"/>
+			<item value="sys"/>
+			<item value="sysout"/>
+			<item value="searchWord22"/>
+			<item value="showSearch"/>
+			<item value="session"/>
+			<item value="getLoginMember"/>
+			<item value="setse"/>
+		</list>
+		<list key="replacehistory">
+			<item value="searchWords"/>
+			<item value="334"/>
+			<item value=""/>
+			<item value="search_header"/>
+			<item value="많이 평가한 배우"/>
+			<item value="department"/>
+			<item value="Main-card-body"/>
+			<item value="Main-card-header"/>
+			<item value="card-md"/>
+			<item value="main-carousel- card"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="1253"/>
+		<item key="DIALOG_Y_ORIGIN" value="353"/>
+		<item key="DIALOG_WIDTH" value="340"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+</section>
