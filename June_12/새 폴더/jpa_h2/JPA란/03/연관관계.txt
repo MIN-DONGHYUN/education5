@@ -1,0 +1,119 @@
+
+>>> 연관관계 매핑이란 ? <<<
+   - 객체의 참조와 테이블의 외래 키를 매핑
+   - 방향 (Direction) : 단방향, 양방향
+    ㆍ방향은 객체 관계에만 존재하고 테이블 관계는 항상 양방향
+    ㆍ방향은 해당 Entity가 다른 Entity를 가질 수 있는 경우로
+      예를 들어 회원 Entity에서 핸드폰 Entity를 멤버 변수로 가지고 있다면 "회원 → 핸드폰" 이라는 방향성을 가진다. 
+      이렇게 한쪽의 방향만 가지면 단방향(unidirectional)이라고 한다.
+      그런데 핸드폰 Entity에서도 회원 Entity를 가진다면 "회원 ↔ 핸드폰" 이라는 관계가 성립된다. 
+      이런 것을 양방향(bidirectional) 관계라고 한다.
+   - 다중성 (Multiplicity) : 다대일[N:1], 일대다[1:N], 일대일[1:1], @ManyToMany
+
+
+
+>>> 연관관계의 주인(Owner) <<<
+   - 객체를 양방향 연관관계로 만들면 연관관계의 주인을 정해야 한다.
+   - 연관관계를 갖는 두 테이블에서 외래 키(foreign key)를 갖게 되는 자식테이블이 연관관계의 주인이 된다.
+   - 연관관계의 주인만이 외래 키(foreign key)를 관리(등록, 수정, 삭제) 할 수 있고, 주인이 아닌 엔티티는 읽기만 할 수 있다.
+
+
+
+>>> @JoinColumn <<<
+   - 조인을 하고 있는 컬럼을 매핑한다.
+   - 외래 키를 매핑할 때 사용한다.
+   - name 속성에는 매핑할 외래 키(foreign key) 컬럼명(이름)을 지정한다.
+   - @JoinColumn을 생략한다면, 외래 키를 찾을 때 다음 기본 전략을 사용한다.
+     필드명(참조하는 테이블의 기본 키 컬럼명)
+   - @ManyToOne, @OneToMany, @OneToOne, @JoinTable, @CollectionTable, @ForeignKey 애노테이션과 주로 같이 사용한다.
+   - 속성
+    ㆍname : 매핑할 외래 키(foreign key) 컬럼명(이름), 기본값 : 필드명(참조하는 테이블의 기본 키 컬럼명)
+    ㆍreferencedColumnName : 외래 키가 참조하는 대상 테이블의 컬럼명, 기본값 : 참조하는 테이블의 기본 키 컬럼명
+    ㆍforeignKey(DDL) : 외래 키 제약조건을 직접 지정할 때 사용하며, 테이블을 생성할 때만 사용
+    ㆍunique, nullable, insertable, updatable, columnDefinition, table : @Column의 속성과 동일
+
+
+>>> @OneToMany <<<
+   - 1 : N 관계(일 대 다)
+   - 회원과 핸드폰 Entity 관계에서 회원이 핸드폰을 가지지 않거나 여러 개 가질 수 있는 경우 1 : N 관계가 성립된다.
+
+
+>>> @ManyToOne <<<
+   - N : 1 관계(다 대 일)
+   - 회원과 핸드폰 Entity 관계에서 핸드폰을 보면 된다.
+     핸드폰은 자신을 소유한 회원이 있다. 하지만 이 회원은 핸드폰을 여러 개 소지할 수도 있고 하나만 소지할 수도 있다. 회원 쪽에서 핸드폰을 바라본다면 @OneToMany 관계이지만 핸드폰이 회원을 바라본다면 @ManyToOne이 된다.
+
+
+>>> @OneToOne <<<
+   - 1 : 1 관계(일 대 일)
+
+
+>>> @ManyToMany <<<
+   - N : N 관계(다 대 다)
+
+
+>>> @ManyToOne – 단방향 <<<
+   - 단방향은 한쪽의 엔티티가 상대 엔티티를 참조하고 있는 상태이다.
+예:
+@Entity
+public class Member {
+    @Id @Column("MEMBER_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+ 
+    @Column(nullable = false)
+    private String username;
+ 
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")  // Team 엔티티의 id 필드를 외래 키로 가짐
+    private Team team;
+    
+    :
+    :
+}
+ 
+@Entity
+public class Team {
+    @Id @Column("TEAM_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+ 
+    @Column(nullable = false)
+    private String name;
+    
+    :
+    :
+}
+
+
+
+>>> @OneToMany로 양방향 관계 맺기 <<<
+   - Member와 Team은 단방향 관계를 맺어 외래키가 생겼기 때문에 Member에서 Team의 정보들을 가져올 수 있다.
+   - Team에서 Member 정보들을 가져와야 하는 경우
+     데이터 모델링에서는 1:N 관계만 설정해주면 자동으로 양방향 관계가 되기 때문에
+     어느 테이블에서든 JOIN만 해주면 원하는 컬럼들을 가져올 수 있지만, JPA에서는 양방향 관계를 맺음으로써 해결할 수 있다.
+
+예:
+@Entity
+public class Team {
+    @Id @Column("TEAM_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+ 
+    @Column(nullable = false)
+    private String name;
+ 
+    @OneToMany(mappedBy = "team")
+    private List<Member> members = new ArrayList<>();
+    
+    :
+    :
+}
+
+   - Team은 Member를 List로 가지며, 연관관계의 주인을 정하기 위해 @OneToMany에 mappedBy 속성을 추가한다.
+   - 연관관계의 주인을 정하는 방법은 mappedBy 속성을 지정하는 것이다.
+    ㆍ주인은 mappedBy 속성을 사용하지 않고, @JoinColumn을 사용
+    ㆍ주인이 아닌 엔티티 클래스는 mappedBy 속성을 사용해 주인을 정할 수 있다.
+   - 주인은 mappedBy 속성을 사용할 수 없으므로 연관관계의 주인이 아닌 Team 엔티티에서 members 필드에 mappedBy의 속성으로 Member 테이블의 Team 필드 이름을 명시해준다.
+
+

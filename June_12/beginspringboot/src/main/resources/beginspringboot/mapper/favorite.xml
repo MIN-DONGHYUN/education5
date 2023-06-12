@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="favorite">
+
+  <!--  
+	<insert id="personFavoriteRegister" parameterType="com.test.favorite.model.PersonFavoriteVO">
+	/beginspringboot/src/main/resources/application.yml 파일에서 type-aliases-package: com.test.**.model 했으므로 아래의 것도 가능하다. 
+  -->
+	<insert id="personFavoriteRegister" parameterType="PersonFavoriteVO">
+		insert into tbl_person_interest(seq, name, school, color, food)
+		values(person_seq.nextval, #{name}, #{school}, #{color}, #{food}) 
+	</insert>	
+	
+	<select id="personFavoriteSelectAll" resultType="PersonFavoriteVO">
+		select seq, name, school, color, food, registerday 
+		from tbl_person_interest 
+		order by seq desc
+	</select>
+	
+	<select id="personFavoriteDetail" parameterType="String" resultType="PersonFavoriteVO">
+		select seq, name, school, color, food, registerday 
+		from tbl_person_interest 
+		where seq = #{seq}
+	</select>
+	
+	<delete id="personFavoriteDelete" parameterType="String" >
+		delete from tbl_person_interest
+		where seq = #{seq} 
+	</delete>
+	
+	<update id="personFavoriteUpdateEnd" parameterType="PersonFavoriteVO">
+		update tbl_person_interest set name = #{name}
+		                             , school = #{school}
+		                             , color = #{color}
+		                             , food = #{food}
+		where seq = #{seq} 
+	</update>
+
+</mapper>

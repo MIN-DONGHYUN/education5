@@ -1,0 +1,8 @@
+
+Spring Boot 는
+- Spring에서 Application 개발 시
+  Spring Legacy Project 에서 하였던 library 추가, dependency 설정, 여러 구성 및 설정파일 등 사전에 많은 작업이 필요했던 단점을 해결해준 것임.
+ 
+- Spring Boot 는 프로젝트 개발시 자주 사용되는 Library 들을 미리 만들어 두었고, 프로젝트 생성시 필요한 것만 선택하면 자동으로 다운받아 설정되도록 해줌.
+- 내장 서버(내부적으로 가지고 있는 tomcat)를 가지고 있어서 WAS를 별도로 설치하지 않아도 개발이 가능함.
+

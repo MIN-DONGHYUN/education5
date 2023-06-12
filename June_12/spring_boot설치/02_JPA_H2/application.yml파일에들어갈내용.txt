@@ -1,0 +1,40 @@
+spring: # 주의할 점은 내용작성시 들여쓰기 내어쓰기를 반드시 꼭 지켜야 한다. 
+  profiles: #실행환경(local(로컬),dev(개발),real(운영))
+    active: local 
+  
+  mvc:
+    view: #뷰 리졸버. view 경로 및 확장자 지정하기. JSP를 뷰로 사용한다.  
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+  jpa:
+    show-sql: true  # 사용되는 SQL문을 콘솔에 출력
+    open-in-view: false
+  
+  messages: #메시지(파일이 여러개일 경우 ,로 구분)
+    basename: messages.validation
+    encoding: UTF-8
+    
+  devtools: #View reload
+    livereload:
+      enabled: true
+    
+    restart: #컨트롤러, 모델단이 바뀌었을 때 프로젝트 재시작(reload) 설정 (정확히는 classpath에 있는 모든 파일)
+      enabled: true #재시작(reload) 함    
+
+  
+logging: #로그 지정
+  level:
+    #root: error
+    '[com.jpa.app]': debug 
+    #com.zaxxer.hikari.HikariConfig: DEBUG
+    #com.zaxxer.hikari: TRACE 
+    
+server:
+  port: 8000
+  servlet:
+    #context-path: /jpa_h2
+    encoding:
+      charset: UTF-8
+      enabled: true #http 인코딩 지원을 활성화할지 여부
+      force: true #post 방식으로 전송했을때 한글데이터가 안깨지도록 함
