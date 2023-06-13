@@ -1,0 +1,86 @@
+package com.jpa.app.service;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jpa.app.domain.Guestbook;
+import com.jpa.app.model.InterGuestRepository;
+
+@Service
+public class GuestService implements InterGuestService {
+
+	@Autowired
+	private InterGuestRepository guestRepository;
+	/*
+	   작성한 InterGuestRepository 를 이용해 작성된 테이블(guestbook)에 SQL문장 없이 CRUD 작업이 되어진다. 
+	   JpaRepository 는 아래와 같은 메소드를 사용하여 CRUD 작업이 되어진다.
+	  
+	  - insert 작업 : save(엔티티 객체) 
+	  - select 작업 : findAll(), findById(키 타입)
+	  - update 작업 : save(엔티티 객체) 
+	  - delete 작업 : deleteById(키 타입) 
+	  특이하게도 insert와 update 작업에는 동일한 메서드인 save()를 이용하는데 
+	  그 이유는 JPA의 구현체가 메모리상(엔티티들을 관리해주는 Entity Manager 가 메모리에 올라감)에서 
+	  행이 없다면 insert, 행이 존재한다면 update 를 동작시키는 방식으로 실행되기 때문이다.
+	*/
+	
+	@Override
+	public void insertGuest(Guestbook dto) throws Exception {
+		guestRepository.save(dto);
+	}
+
+	@Override
+	public void updateGuest(Guestbook dto) throws Exception {
+		guestRepository.save(dto); // save : 행이 존재하면 update, 행이 없으면 insert 해줌
+	}
+
+	@Override
+	public void deleteGuest(long num) throws Exception {
+		guestRepository.deleteById(num);
+			
+/*
+			Guest dto = dao.findById(num)
+                    .orElseThrow(() -> new IllegalAccessError("[num=" + num + "] 해당 게시글이 존재하지 않습니다."));
+            dao.delete(board);      
+*/                    			
+	}
+
+	@Override
+	public List<Guestbook> listGuest() throws Exception {
+		List<Guestbook> list = guestRepository.findAll();
+		return list;
+	}
+
+	
+	@Override
+	public Guestbook viewGuest(long num) throws Exception {
+		
+		Guestbook dto = null;
+		
+		try {
+			Optional<Guestbook> guest = guestRepository.findById(num);
+			/*
+	            Java8에서는 Optional<T> 클래스를 사용해 NullPointerException 을 방지할 수 있도록 도와준다. 
+	            Optional<T>는 null이 올 수 있는 값을 감싸는 Wrapper 클래스 이므로, 참조하더라도 NullPointerException 이 발생하지 않도록 도와준다. 
+	            Optional 클래스는 null 이더라도 바로 NullPointerException 이 발생하지 않으며, 클래스이기 때문에 각종 메소드를 제공해준다. 
+	        */
+			dto = guest.get();     // java.util.Optional.get() 은 값이 존재하면 값을 리턴시켜주고, 값이 없으면 NoSuchElementException 을 유발시켜준다.
+			dto.setContent(dto.getContent().replaceAll("\r\n", "<br>"));
+/*
+			dto = dao.findById(num)
+                    .orElseThrow(() -> new IllegalAccessError("[num=" + num + "] 해당 게시글이 존재하지 않습니다."));
+*/                    			
+		} catch (NoSuchElementException e) {
+			// guest.get()에서 데이터가 존재하지 않는 경우
+		} 
+		
+		return dto;
+	}
+	
+
+}
+
